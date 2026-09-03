@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backoffice - Login</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body>
+<div class="login-wrapper">
+    <div class="card login-card">
+        <div class="card-content">
+            <div class="center-align" style="margin-bottom: 1rem;">
+                <i class="material-icons large indigo-text text-darken-1">lock</i>
+                <h5 style="margin: .3rem 0 0;">Backoffice</h5>
+                <p class="grey-text">Grupo de Afiliados</p>
+            </div>
+
+            <div class="card-panel red lighten-4 red-text text-darken-4" th:if="${param.erro}">
+                Usuário ou senha inválidos.
+            </div>
+            <div class="card-panel blue lighten-4 blue-text text-darken-4" th:if="${param.logout}">
+                Sessão encerrada.
+            </div>
+
+            <form method="post" th:action="@{/admin/login}">
+                <div class="input-field">
+                    <i class="material-icons prefix">person</i>
+                    <input id="username" name="username" type="text" autofocus="autofocus" required="required"/>
+                    <label for="username">Usuário</label>
+                </div>
+                <div class="input-field">
+                    <i class="material-icons prefix">vpn_key</i>
+                    <input id="password" name="password" type="password" required="required"/>
+                    <label for="password">Senha</label>
+                </div>
+                <button class="btn indigo waves-effect waves-light" type="submit" style="width:100%; margin-top: .5rem;">
+                    Entrar <i class="material-icons right">send</i>
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</body>
+</html>

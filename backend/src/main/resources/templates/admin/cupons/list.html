@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cupons - Backoffice</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body>
+<div th:replace="~{fragments/layout :: navbar('cupons')}"></div>
+
+<div class="container">
+    <div class="page-header">
+        <h4>Cupons</h4>
+    </div>
+
+    <table class="striped responsive-table" th:if="${not #lists.isEmpty(cupons)}">
+        <thead>
+        <tr>
+            <th>Código</th>
+            <th>Loja</th>
+            <th>Desconto</th>
+            <th>Compra mínima</th>
+            <th>Validade</th>
+            <th>Status</th>
+            <th>Ações</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="cupom : ${cupons}">
+            <td th:text="${cupom.codigo()}"></td>
+            <td th:text="${cupom.loja()}"></td>
+            <td th:text="${cupom.tipoDesconto() == 'PERCENTUAL'} ? ${cupom.valorDesconto()} + '%' : 'R$ ' + ${cupom.valorDesconto()}"></td>
+            <td th:text="${cupom.valorMinimoCompra() != null} ? 'R$ ' + ${cupom.valorMinimoCompra()} : '—'"></td>
+            <td th:text="${#temporals.format(cupom.dataValidade(), 'dd/MM/yyyy HH:mm')}"></td>
+            <td>
+                <span class="status-chip ativo" th:if="${cupom.status() == 'ATIVO'}">ATIVO</span>
+                <span class="status-chip inativo" th:unless="${cupom.status() == 'ATIVO'}">INATIVO</span>
+            </td>
+            <td class="action-icons">
+                <a th:href="@{/admin/cupons/{id}/editar(id=${cupom.id()})}" title="Editar">
+                    <i class="material-icons">edit</i>
+                </a>
+                <form th:action="@{/admin/cupons/{id}/desabilitar(id=${cupom.id()})}" method="post" th:if="${cupom.status() == 'ATIVO'}">
+                    <button type="submit" title="Desabilitar"><i class="material-icons">visibility_off</i></button>
+                </form>
+                <form th:action="@{/admin/cupons/{id}/habilitar(id=${cupom.id()})}" method="post" th:unless="${cupom.status() == 'ATIVO'}">
+                    <button type="submit" title="Habilitar"><i class="material-icons">visibility</i></button>
+                </form>
+                <form th:action="@{/admin/cupons/{id}/remover(id=${cupom.id()})}" method="post"
+                      onsubmit="return confirm('Remover este cupom?');">
+                    <button type="submit" title="Remover"><i class="material-icons">delete</i></button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="center-align grey-text empty-state" th:if="${#lists.isEmpty(cupons)}">
+        <i class="material-icons large">confirmation_number</i>
+        <p>Nenhum cupom cadastrado ainda.</p>
+    </div>
+</div>
+
+<a th:href="@{/admin/cupons/novo}" class="btn-floating btn-large indigo fab-add waves-effect waves-light" title="Novo cupom">
+    <i class="material-icons">add</i>
+</a>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</body>
+</html>
