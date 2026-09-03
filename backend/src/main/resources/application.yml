@@ -6,10 +6,10 @@ spring:
     name: vendas-platform
 
   datasource:
-    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/affiliatedeals}
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:affiliatedeals}
     driver-class-name: org.postgresql.Driver
-    username: ${DATABASE_USERNAME:postgres}
-    password: ${DATABASE_PASSWORD:postgres}
+    username: ${DB_USER:postgres}
+    password: ${DB_PASS:postgres}
 
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
