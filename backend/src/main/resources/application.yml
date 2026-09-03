@@ -6,12 +6,13 @@ spring:
     name: vendas-platform
 
   datasource:
-    url: jdbc:h2:mem:vendasdb;DB_CLOSE_DELAY=-1
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/affiliatedeals}
+    driver-class-name: org.postgresql.Driver
+    username: ${DATABASE_USERNAME:postgres}
+    password: ${DATABASE_PASSWORD:postgres}
 
   jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
     show-sql: false
@@ -21,10 +22,6 @@ spring:
     multipart:
       max-file-size: 5MB
       max-request-size: 6MB
-
-  h2:
-    console:
-      enabled: false
 
   thymeleaf:
     cache: true
