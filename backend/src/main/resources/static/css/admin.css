@@ -157,7 +157,7 @@ button { font-family: inherit; cursor: pointer; }
     backdrop-filter: blur(12px);
   }
 
-  .admin-nav__checkbox:checked ~ .admin-nav__inner .admin-nav__links {
+  .admin-nav__checkbox:checked ~ .admin-nav .admin-nav__links {
     display: flex;
   }
 
