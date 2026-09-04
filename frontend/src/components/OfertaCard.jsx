@@ -1,4 +1,5 @@
 import { resolverUrlImagem } from '../api/apiClient';
+import { registrarEvento } from '../api/eventoApi';
 import CupomMini from './CupomMini.jsx';
 import CountdownTimer from './CountdownTimer.jsx';
 
@@ -30,7 +31,8 @@ export default function OfertaCard({ oferta, expiraEm }) {
 
   return (
     <div className="card">
-      <a className="card__link" href={oferta.linkAfiliado} target="_blank" rel="noopener noreferrer sponsored">
+      <a className="card__link" href={oferta.linkAfiliado} target="_blank" rel="noopener noreferrer sponsored"
+         onClick={() => registrarEvento(oferta.id, 'CLIQUE_OFERTA')}>
         <div className="card__imagem">
           <img src={resolverUrlImagem(oferta.imagemUrl)} alt={oferta.nomeProduto} loading="lazy" />
           {temPromocao && <span className="card__badge-desconto">-{percentualDesconto}%</span>}
@@ -52,7 +54,8 @@ export default function OfertaCard({ oferta, expiraEm }) {
         {temCupons && (
           <div className="card__cupons">
             {oferta.cupons.map((cupom) => (
-              <CupomMini key={cupom.id} cupom={cupom} />
+              <CupomMini key={cupom.id} cupom={cupom}
+                onUsar={() => registrarEvento(oferta.id, 'CLIQUE_CUPOM')} />
             ))}
           </div>
         )}
@@ -62,6 +65,7 @@ export default function OfertaCard({ oferta, expiraEm }) {
           href={oferta.linkAfiliado}
           target="_blank"
           rel="noopener noreferrer sponsored"
+          onClick={() => registrarEvento(oferta.id, 'CLIQUE_COMPRAR')}
         >
           {temCupons ? 'Comprar agora' : 'Ver oferta'}
         </a>

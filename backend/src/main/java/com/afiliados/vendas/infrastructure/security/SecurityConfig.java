@@ -54,6 +54,7 @@ public class SecurityConfig {
             .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/**").permitAll()
+                .requestMatchers("/api/eventos").permitAll()
                 .requestMatchers("/admin/login", "/css/**", "/js/**", "/webjars/**").permitAll()
                 .requestMatchers("/h2-console/**").permitAll()
                 .requestMatchers("/admin/**").authenticated()

@@ -11,7 +11,7 @@ function formatarDesconto(cupom) {
  * Com link: o clique redireciona para a página de resgate.
  * Sem link (só código): o clique copia o código para a área de transferência.
  */
-export default function CupomMini({ cupom }) {
+export default function CupomMini({ cupom, onUsar }) {
   const [copiado, setCopiado] = useState(false);
   const temLink = Boolean(cupom.linkOpcional);
 
@@ -40,6 +40,7 @@ export default function CupomMini({ cupom }) {
 
   function copiarCodigo(evento) {
     evento.preventDefault();
+    onUsar?.();
 
     if (navigator.clipboard?.writeText) {
       navigator.clipboard.writeText(cupom.codigo).then(marcarCopiado).catch(copiarComExecCommand);
@@ -55,6 +56,7 @@ export default function CupomMini({ cupom }) {
         href={cupom.linkOpcional}
         target="_blank"
         rel="noopener noreferrer sponsored"
+        onClick={onUsar}
       >
         <span className="cupom-mini__desconto">{formatarDesconto(cupom)}</span>
         <span className="cupom-mini__acao">Resgatar cupom</span>
