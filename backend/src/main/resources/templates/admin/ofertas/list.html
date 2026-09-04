@@ -5,74 +5,89 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ofertas - Backoffice</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Poppins:wght@400;500;600;700&display=swap">
     <link rel="stylesheet" th:href="@{/css/admin.css}">
 </head>
 <body>
+
 <div th:replace="~{fragments/layout :: navbar('ofertas')}"></div>
 
-<div class="container">
+<div class="admin-page">
     <div class="page-header">
         <h4>Ofertas</h4>
+        <a th:href="@{/admin/ofertas/novo}" class="btn">
+            <i class="material-icons">add</i> Nova oferta
+        </a>
     </div>
 
-    <table class="striped responsive-table" th:if="${not #lists.isEmpty(ofertas)}">
-        <thead>
-        <tr>
-            <th></th>
-            <th>Produto</th>
-            <th>Loja</th>
-            <th>Valor</th>
-            <th>Expira (dia)</th>
-            <th>Expira (semana)</th>
-            <th>Status</th>
-            <th>Ações</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="oferta : ${ofertas}">
-            <td>
-                <img th:if="${oferta.imagemUrl()} != null" th:src="${oferta.imagemUrl()}" alt=""
-                     style="width:40px; height:40px; object-fit:cover; border-radius:6px; display:block;"/>
-            </td>
-            <td th:text="${oferta.nomeProduto()}"></td>
-            <td th:text="${oferta.loja()}"></td>
-            <td th:text="${'R$ ' + #numbers.formatDecimal(oferta.valor(), 1, 2)}"></td>
-            <td th:text="${#temporals.format(oferta.dataExpiracaoDia(), 'dd/MM/yyyy HH:mm')}"></td>
-            <td th:text="${#temporals.format(oferta.dataExpiracaoSemana(), 'dd/MM/yyyy HH:mm')}"></td>
-            <td>
-                <span class="status-chip ativa" th:if="${oferta.status() == 'ATIVA'}">ATIVA</span>
-                <span class="status-chip inativa" th:unless="${oferta.status() == 'ATIVA'}">INATIVA</span>
-            </td>
-            <td class="action-icons">
-                <a th:href="@{/admin/ofertas/{id}/editar(id=${oferta.id()})}" title="Editar">
-                    <i class="material-icons">edit</i>
-                </a>
-                <form th:action="@{/admin/ofertas/{id}/desabilitar(id=${oferta.id()})}" method="post" th:if="${oferta.status() == 'ATIVA'}">
-                    <button type="submit" title="Desabilitar"><i class="material-icons">visibility_off</i></button>
-                </form>
-                <form th:action="@{/admin/ofertas/{id}/habilitar(id=${oferta.id()})}" method="post" th:unless="${oferta.status() == 'ATIVA'}">
-                    <button type="submit" title="Habilitar"><i class="material-icons">visibility</i></button>
-                </form>
-                <form th:action="@{/admin/ofertas/{id}/remover(id=${oferta.id()})}" method="post"
-                      onsubmit="return confirm('Remover esta oferta?');">
-                    <button type="submit" title="Remover"><i class="material-icons">delete</i></button>
-                </form>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+    <div class="table-wrapper" th:if="${not #lists.isEmpty(ofertas)}">
+        <table>
+            <thead>
+            <tr>
+                <th></th>
+                <th>Produto</th>
+                <th>Loja</th>
+                <th>Valor</th>
+                <th>Expira (dia)</th>
+                <th>Expira (semana)</th>
+                <th>Status</th>
+                <th>Ações</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="oferta : ${ofertas}">
+                <td class="td-img" data-label="">
+                    <img th:if="${oferta.imagemUrl()} != null"
+                         th:src="${oferta.imagemUrl()}" alt=""/>
+                </td>
+                <td data-label="Produto" th:text="${oferta.nomeProduto()}"></td>
+                <td data-label="Loja" th:text="${oferta.loja()}"></td>
+                <td data-label="Valor" th:text="${'R$ ' + #numbers.formatDecimal(oferta.valor(), 1, 2)}"></td>
+                <td data-label="Expira (dia)" th:text="${#temporals.format(oferta.dataExpiracaoDia(), 'dd/MM/yy HH:mm')}"></td>
+                <td data-label="Expira (sem)" th:text="${#temporals.format(oferta.dataExpiracaoSemana(), 'dd/MM/yy HH:mm')}"></td>
+                <td data-label="Status">
+                    <span class="status-chip status-chip--ativo"  th:if="${oferta.status() == 'ATIVA'}">ATIVA</span>
+                    <span class="status-chip status-chip--inativo" th:unless="${oferta.status() == 'ATIVA'}">INATIVA</span>
+                </td>
+                <td data-label="Ações">
+                    <div class="action-icons">
+                        <a th:href="@{/admin/ofertas/{id}/editar(id=${oferta.id()})}" title="Editar">
+                            <i class="material-icons">edit</i>
+                        </a>
+                        <form th:action="@{/admin/ofertas/{id}/desabilitar(id=${oferta.id()})}" method="post"
+                              th:if="${oferta.status() == 'ATIVA'}">
+                            <button type="submit" class="btn-disable" title="Desabilitar">
+                                <i class="material-icons">visibility_off</i>
+                            </button>
+                        </form>
+                        <form th:action="@{/admin/ofertas/{id}/habilitar(id=${oferta.id()})}" method="post"
+                              th:unless="${oferta.status() == 'ATIVA'}">
+                            <button type="submit" class="btn-disable" title="Habilitar">
+                                <i class="material-icons">visibility</i>
+                            </button>
+                        </form>
+                        <form th:action="@{/admin/ofertas/{id}/remover(id=${oferta.id()})}" method="post"
+                              onsubmit="return confirm('Remover esta oferta?');">
+                            <button type="submit" class="btn-delete" title="Remover">
+                                <i class="material-icons">delete</i>
+                            </button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 
-    <div class="center-align grey-text empty-state" th:if="${#lists.isEmpty(ofertas)}">
-        <i class="material-icons large">sell</i>
+    <div class="empty-state" th:if="${#lists.isEmpty(ofertas)}">
+        <i class="material-icons">sell</i>
         <p>Nenhuma oferta cadastrada ainda.</p>
     </div>
 </div>
 
-<a th:href="@{/admin/ofertas/novo}" class="btn-floating btn-large indigo fab-add waves-effect waves-light" title="Nova oferta">
+<a th:href="@{/admin/ofertas/novo}" class="fab-add" title="Nova oferta">
     <i class="material-icons">add</i>
 </a>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>
 </html>

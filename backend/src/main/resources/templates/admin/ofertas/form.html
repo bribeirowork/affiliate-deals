@@ -5,94 +5,113 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Oferta - Backoffice</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Poppins:wght@400;500;600;700&display=swap">
     <link rel="stylesheet" th:href="@{/css/admin.css}">
 </head>
 <body>
+
 <div th:replace="~{fragments/layout :: navbar('ofertas')}"></div>
 
-<div class="container">
+<div class="admin-page">
     <div class="page-header">
         <h4 th:text="${oferta != null} ? 'Editar oferta' : 'Nova oferta'"></h4>
+        <a th:href="@{/admin/ofertas}" class="btn btn--ghost">
+            <i class="material-icons">arrow_back</i> Voltar
+        </a>
     </div>
 
-    <div class="card">
-        <div class="card-content">
-            <form method="post" enctype="multipart/form-data"
-                  th:action="${oferta != null} ? @{/admin/ofertas/{id}(id=${oferta.id()})} : @{/admin/ofertas}">
+    <div class="admin-card">
+        <form method="post" enctype="multipart/form-data"
+              th:action="${oferta != null} ? @{/admin/ofertas/{id}(id=${oferta.id()})} : @{/admin/ofertas}">
 
-                <div class="row" style="margin-bottom: 0;">
-                    <div class="input-field col s12">
-                        <input id="nomeProduto" type="text" name="nomeProduto" th:value="${oferta?.nomeProduto()}" required="required"/>
-                        <label for="nomeProduto" class="active">Nome do produto</label>
-                    </div>
+            <div class="form-grid">
 
-                    <div class="input-field col s12">
-                        <input id="imagemUrl" type="text" name="imagemUrl"
-                               th:value="${oferta != null and !oferta.possuiImagemPropria()} ? ${oferta.imagemUrl()} : null"/>
-                        <label for="imagemUrl" class="active">URL da imagem (usada só se nenhum arquivo for enviado)</label>
-                    </div>
-
-                    <div class="col s12" style="margin-bottom: 1.2rem;">
-                        <div th:if="${oferta != null and oferta.possuiImagemPropria()}" style="margin-bottom:.6rem;">
-                            <img th:src="${oferta.imagemUrl()}" alt="Imagem atual"
-                                 style="max-height:110px; border-radius:8px; display:block; margin-bottom:.4rem;"/>
-                            <label>
-                                <input type="checkbox" name="removerImagem" value="true"/>
-                                <span>Remover imagem atual</span>
-                            </label>
-                        </div>
-                        <label for="imagemArquivo" style="display:block; font-size:.85rem; color:#555; margin-bottom:.3rem;">
-                            Enviar imagem (upload, substitui a URL acima)
-                        </label>
-                        <input id="imagemArquivo" type="file" name="imagemArquivo" accept="image/*"/>
-                    </div>
-
-                    <div class="input-field col s12 m6">
-                        <select id="loja" name="loja" class="browser-default" required="required">
-                            <option th:each="l : ${lojas}" th:value="${l}" th:text="${l}"
-                                    th:selected="${oferta != null and oferta.loja() == l.name()}"></option>
-                        </select>
-                        <label for="loja" class="active">Loja</label>
-                    </div>
-
-                    <div class="input-field col s12 m6">
-                        <input id="valorOriginal" type="number" step="0.01" name="valorOriginal" th:value="${oferta?.valorOriginal()}"/>
-                        <label for="valorOriginal" class="active">Preço original (opcional, para promoção)</label>
-                    </div>
-
-                    <div class="input-field col s12 m6">
-                        <input id="valor" type="number" step="0.01" name="valor" th:value="${oferta?.valor()}" required="required"/>
-                        <label for="valor" class="active">Valor atual (R$)</label>
-                    </div>
-
-                    <div class="input-field col s12">
-                        <input id="linkAfiliado" type="text" name="linkAfiliado" th:value="${oferta?.linkAfiliado()}" required="required"/>
-                        <label for="linkAfiliado" class="active">Link de afiliado</label>
-                    </div>
-
-                    <div class="input-field col s12 m6">
-                        <input id="dataExpiracaoDia" type="datetime-local" name="dataExpiracaoDia"
-                               th:value="${oferta != null ? #temporals.format(oferta.dataExpiracaoDia(), 'yyyy-MM-dd''T''HH:mm') : null}" required="required"/>
-                        <label for="dataExpiracaoDia" class="active">Expira (oferta do dia)</label>
-                    </div>
-
-                    <div class="input-field col s12 m6">
-                        <input id="dataExpiracaoSemana" type="datetime-local" name="dataExpiracaoSemana"
-                               th:value="${oferta != null ? #temporals.format(oferta.dataExpiracaoSemana(), 'yyyy-MM-dd''T''HH:mm') : null}" required="required"/>
-                        <label for="dataExpiracaoSemana" class="active">Expira (oferta da semana)</label>
-                    </div>
+                <div class="form-group span-2">
+                    <label for="nomeProduto">Nome do produto</label>
+                    <input id="nomeProduto" type="text" name="nomeProduto"
+                           th:value="${oferta?.nomeProduto()}"
+                           placeholder="Ex: Fone Bluetooth XYZ"
+                           required/>
                 </div>
 
-                <button class="btn indigo waves-effect waves-light" type="submit">
-                    Salvar <i class="material-icons right">save</i>
+                <div class="form-group span-2">
+                    <label for="imagemUrl">URL da imagem (usada se nenhum arquivo for enviado)</label>
+                    <input id="imagemUrl" type="text" name="imagemUrl"
+                           th:value="${oferta != null and !oferta.possuiImagemPropria()} ? ${oferta.imagemUrl()} : null"
+                           placeholder="https://..."/>
+                </div>
+
+                <div class="form-group span-2">
+                    <label>Imagem atual</label>
+                    <div th:if="${oferta != null and oferta.possuiImagemPropria()}">
+                        <div class="img-preview">
+                            <img th:src="${oferta.imagemUrl()}" alt="Imagem atual"/>
+                        </div>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="removerImagem" value="true"/>
+                            Remover imagem atual
+                        </label>
+                    </div>
+                    <label for="imagemArquivo">Upload de imagem (substitui URL acima)</label>
+                    <input id="imagemArquivo" type="file" name="imagemArquivo" accept="image/*"/>
+                </div>
+
+                <div class="form-group">
+                    <label for="loja">Loja</label>
+                    <select id="loja" name="loja" required>
+                        <option th:each="l : ${lojas}" th:value="${l}" th:text="${l}"
+                                th:selected="${oferta != null and oferta.loja() == l.name()}"></option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="linkAfiliado">Link de afiliado</label>
+                    <input id="linkAfiliado" type="text" name="linkAfiliado"
+                           th:value="${oferta?.linkAfiliado()}"
+                           placeholder="https://..."
+                           required/>
+                </div>
+
+                <div class="form-group">
+                    <label for="valorOriginal">Preço original (opcional — para promoção)</label>
+                    <input id="valorOriginal" type="number" step="0.01" name="valorOriginal"
+                           th:value="${oferta?.valorOriginal()}"
+                           placeholder="0.00"/>
+                </div>
+
+                <div class="form-group">
+                    <label for="valor">Valor atual (R$)</label>
+                    <input id="valor" type="number" step="0.01" name="valor"
+                           th:value="${oferta?.valor()}"
+                           placeholder="0.00"
+                           required/>
+                </div>
+
+                <div class="form-group">
+                    <label for="dataExpiracaoDia">Expira — oferta do dia</label>
+                    <input id="dataExpiracaoDia" type="datetime-local" name="dataExpiracaoDia"
+                           th:value="${oferta != null ? #temporals.format(oferta.dataExpiracaoDia(), 'yyyy-MM-dd''T''HH:mm') : null}"
+                           required/>
+                </div>
+
+                <div class="form-group">
+                    <label for="dataExpiracaoSemana">Expira — oferta da semana</label>
+                    <input id="dataExpiracaoSemana" type="datetime-local" name="dataExpiracaoSemana"
+                           th:value="${oferta != null ? #temporals.format(oferta.dataExpiracaoSemana(), 'yyyy-MM-dd''T''HH:mm') : null}"
+                           required/>
+                </div>
+
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn">
+                    <i class="material-icons">save</i> Salvar
                 </button>
-                <a th:href="@{/admin/ofertas}" class="btn-flat waves-effect">Cancelar</a>
-            </form>
-        </div>
+                <a th:href="@{/admin/ofertas}" class="btn btn--ghost">Cancelar</a>
+            </div>
+        </form>
     </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>
 </html>

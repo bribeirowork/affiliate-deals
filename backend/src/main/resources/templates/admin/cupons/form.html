@@ -5,75 +5,91 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cupom - Backoffice</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Poppins:wght@400;500;600;700&display=swap">
     <link rel="stylesheet" th:href="@{/css/admin.css}">
 </head>
 <body>
+
 <div th:replace="~{fragments/layout :: navbar('cupons')}"></div>
 
-<div class="container">
+<div class="admin-page">
     <div class="page-header">
         <h4 th:text="${cupom != null} ? 'Editar cupom' : 'Novo cupom'"></h4>
+        <a th:href="@{/admin/cupons}" class="btn btn--ghost">
+            <i class="material-icons">arrow_back</i> Voltar
+        </a>
     </div>
 
-    <div class="card">
-        <div class="card-content">
-            <form method="post"
-                  th:action="${cupom != null} ? @{/admin/cupons/{id}(id=${cupom.id()})} : @{/admin/cupons}">
+    <div class="admin-card">
+        <form method="post"
+              th:action="${cupom != null} ? @{/admin/cupons/{id}(id=${cupom.id()})} : @{/admin/cupons}">
 
-                <div class="row" style="margin-bottom: 0;">
-                    <div class="input-field col s12 m6">
-                        <input id="codigo" type="text" name="codigo" th:value="${cupom?.codigo()}" required="required"/>
-                        <label for="codigo" class="active">Código</label>
-                    </div>
+            <div class="form-grid">
 
-                    <div class="input-field col s12 m6">
-                        <select id="loja" name="loja" class="browser-default" required="required">
-                            <option th:each="l : ${lojas}" th:value="${l}" th:text="${l}"
-                                    th:selected="${cupom != null and cupom.loja() == l.name()}"></option>
-                        </select>
-                        <label for="loja" class="active">Loja</label>
-                    </div>
-
-                    <div class="input-field col s12">
-                        <input id="linkOpcional" type="text" name="linkOpcional" th:value="${cupom?.linkOpcional()}"/>
-                        <label for="linkOpcional" class="active">Link (opcional)</label>
-                    </div>
-
-                    <div class="input-field col s12 m6">
-                        <select id="tipoDesconto" name="tipoDesconto" class="browser-default" required="required">
-                            <option th:each="t : ${tipos}" th:value="${t}" th:text="${t}"
-                                    th:selected="${cupom != null and cupom.tipoDesconto() == t.name()}"></option>
-                        </select>
-                        <label for="tipoDesconto" class="active">Tipo de desconto</label>
-                    </div>
-
-                    <div class="input-field col s12 m6">
-                        <input id="valorDesconto" type="number" step="0.01" name="valorDesconto" th:value="${cupom?.valorDesconto()}" required="required"/>
-                        <label for="valorDesconto" class="active">Valor do desconto</label>
-                    </div>
-
-                    <div class="input-field col s12 m6">
-                        <input id="valorMinimoCompra" type="number" step="0.01" name="valorMinimoCompra" th:value="${cupom?.valorMinimoCompra()}"/>
-                        <label for="valorMinimoCompra" class="active">Valor mínimo de compra (opcional)</label>
-                    </div>
-
-                    <div class="input-field col s12 m6">
-                        <input id="dataValidade" type="datetime-local" name="dataValidade"
-                               th:value="${cupom != null ? #temporals.format(cupom.dataValidade(), 'yyyy-MM-dd''T''HH:mm') : null}" required="required"/>
-                        <label for="dataValidade" class="active">Validade</label>
-                    </div>
+                <div class="form-group">
+                    <label for="codigo">Código</label>
+                    <input id="codigo" type="text" name="codigo"
+                           th:value="${cupom?.codigo()}"
+                           placeholder="CUPOM10"
+                           required/>
                 </div>
 
-                <button class="btn indigo waves-effect waves-light" type="submit">
-                    Salvar <i class="material-icons right">save</i>
+                <div class="form-group">
+                    <label for="loja">Loja</label>
+                    <select id="loja" name="loja" required>
+                        <option th:each="l : ${lojas}" th:value="${l}" th:text="${l}"
+                                th:selected="${cupom != null and cupom.loja() == l.name()}"></option>
+                    </select>
+                </div>
+
+                <div class="form-group span-2">
+                    <label for="linkOpcional">Link para resgatar (opcional — se vazio, usuário copia o código)</label>
+                    <input id="linkOpcional" type="text" name="linkOpcional"
+                           th:value="${cupom?.linkOpcional()}"
+                           placeholder="https://..."/>
+                </div>
+
+                <div class="form-group">
+                    <label for="tipoDesconto">Tipo de desconto</label>
+                    <select id="tipoDesconto" name="tipoDesconto" required>
+                        <option th:each="t : ${tipos}" th:value="${t}" th:text="${t}"
+                                th:selected="${cupom != null and cupom.tipoDesconto() == t.name()}"></option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="valorDesconto">Valor do desconto</label>
+                    <input id="valorDesconto" type="number" step="0.01" name="valorDesconto"
+                           th:value="${cupom?.valorDesconto()}"
+                           placeholder="10.00"
+                           required/>
+                </div>
+
+                <div class="form-group">
+                    <label for="valorMinimoCompra">Valor mínimo de compra (opcional)</label>
+                    <input id="valorMinimoCompra" type="number" step="0.01" name="valorMinimoCompra"
+                           th:value="${cupom?.valorMinimoCompra()}"
+                           placeholder="0.00"/>
+                </div>
+
+                <div class="form-group">
+                    <label for="dataValidade">Validade</label>
+                    <input id="dataValidade" type="datetime-local" name="dataValidade"
+                           th:value="${cupom != null ? #temporals.format(cupom.dataValidade(), 'yyyy-MM-dd''T''HH:mm') : null}"
+                           required/>
+                </div>
+
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn">
+                    <i class="material-icons">save</i> Salvar
                 </button>
-                <a th:href="@{/admin/cupons}" class="btn-flat waves-effect">Cancelar</a>
-            </form>
-        </div>
+                <a th:href="@{/admin/cupons}" class="btn btn--ghost">Cancelar</a>
+            </div>
+        </form>
     </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>
 </html>

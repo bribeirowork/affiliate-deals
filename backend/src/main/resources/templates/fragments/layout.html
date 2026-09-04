@@ -1,28 +1,42 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <body>
-<nav th:fragment="navbar(active)" class="indigo">
-    <div class="nav-wrapper container">
-        <a th:href="@{/admin/ofertas}" class="brand-logo">
-            <i class="material-icons left">storefront</i>Backoffice
+<fragment th:fragment="navbar(active)">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Poppins:wght@400;500;600;700&display=swap">
+
+<input type="checkbox" id="nav-toggle" class="admin-nav__checkbox">
+<nav class="admin-nav">
+    <div class="admin-nav__inner">
+        <a th:href="@{/admin/ofertas}" class="admin-nav__brand">
+            <i class="material-icons">storefront</i>
+            Backoffice
         </a>
-        <ul class="right hide-on-med-and-down">
-            <li th:classappend="${active == 'ofertas'} ? 'active-link' : ''">
-                <a th:href="@{/admin/ofertas}"><i class="material-icons left">sell</i>Ofertas</a>
-            </li>
-            <li th:classappend="${active == 'cupons'} ? 'active-link' : ''">
-                <a th:href="@{/admin/cupons}"><i class="material-icons left">confirmation_number</i>Cupons</a>
-            </li>
-            <li><span class="user-chip" sec:authentication="name"></span></li>
-            <li>
-                <form th:action="@{/admin/logout}" method="post" class="logout-form">
-                    <button type="submit" class="btn-flat white-text waves-effect">
-                        <i class="material-icons left">logout</i>Sair
-                    </button>
-                </form>
-            </li>
-        </ul>
+
+        <label for="nav-toggle" class="admin-nav__toggle">
+            <i class="material-icons">menu</i>
+        </label>
+
+        <div class="admin-nav__links">
+            <a th:href="@{/admin/ofertas}"
+               th:classappend="${active == 'ofertas'} ? ' admin-nav__link--active' : ''"
+               class="admin-nav__link">
+                <i class="material-icons">sell</i> Ofertas
+            </a>
+            <a th:href="@{/admin/cupons}"
+               th:classappend="${active == 'cupons'} ? ' admin-nav__link--active' : ''"
+               class="admin-nav__link">
+                <i class="material-icons">confirmation_number</i> Cupons
+            </a>
+            <span class="admin-nav__user" sec:authentication="name"></span>
+            <form th:action="@{/admin/logout}" method="post" style="display:inline;">
+                <button type="submit" class="admin-nav__logout">
+                    <i class="material-icons">logout</i> Sair
+                </button>
+            </form>
+        </div>
     </div>
 </nav>
+</fragment>
 </body>
 </html>
