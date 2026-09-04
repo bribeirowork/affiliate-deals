@@ -28,6 +28,11 @@
                class="admin-nav__link">
                 <i class="material-icons">confirmation_number</i> Cupons
             </a>
+            <a th:href="@{/admin/eventos}"
+               th:classappend="${active == 'eventos'} ? ' admin-nav__link--active' : ''"
+               class="admin-nav__link">
+                <i class="material-icons">insights</i> Painel
+            </a>
             <span class="admin-nav__user" sec:authentication="name"></span>
             <form th:action="@{/admin/logout}" method="post" style="display:inline;">
                 <button type="submit" class="admin-nav__logout">

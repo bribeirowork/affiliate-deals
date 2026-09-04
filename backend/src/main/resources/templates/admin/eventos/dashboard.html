@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Oportunidades - Backoffice</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Poppins:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body>
+
+<div th:replace="~{fragments/layout :: navbar('eventos')}"></div>
+
+<div class="admin-page">
+
+    <div class="page-header">
+        <h4><i class="material-icons" style="vertical-align:middle;margin-right:.3rem;color:#8b5cf6">insights</i> Painel de Oportunidades</h4>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="dash-kpi-grid">
+        <div class="kpi-card">
+            <span class="kpi-card__icon" style="background:rgba(99,102,241,.15);color:#818cf8">
+                <i class="material-icons">touch_app</i>
+            </span>
+            <div>
+                <div class="kpi-card__value" th:text="${dash.total}">0</div>
+                <div class="kpi-card__label">Total de Cliques</div>
+            </div>
+        </div>
+        <div class="kpi-card">
+            <span class="kpi-card__icon" style="background:rgba(139,92,246,.15);color:#a78bfa">
+                <i class="material-icons">sell</i>
+            </span>
+            <div>
+                <div class="kpi-card__value" th:text="${dash.cliquesOferta}">0</div>
+                <div class="kpi-card__label">Cliques em Ofertas</div>
+            </div>
+        </div>
+        <div class="kpi-card">
+            <span class="kpi-card__icon" style="background:rgba(244,114,182,.15);color:#f472b6">
+                <i class="material-icons">confirmation_number</i>
+            </span>
+            <div>
+                <div class="kpi-card__value" th:text="${dash.cliquesCupom}">0</div>
+                <div class="kpi-card__label">Cliques em Cupons</div>
+            </div>
+        </div>
+        <div class="kpi-card">
+            <span class="kpi-card__icon" style="background:rgba(34,197,94,.12);color:#4ade80">
+                <i class="material-icons">shopping_cart</i>
+            </span>
+            <div>
+                <div class="kpi-card__value" th:text="${dash.cliquesComprar}">0</div>
+                <div class="kpi-card__label">Comprar Agora</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Middle row: Device + Top Ofertas -->
+    <div class="dash-mid-grid">
+
+        <!-- Device Split -->
+        <div class="admin-card">
+            <h5 class="dash-section-title">
+                <i class="material-icons">devices</i> Dispositivos
+            </h5>
+            <div class="device-split">
+                <div class="device-item">
+                    <div class="device-item__header">
+                        <span><i class="material-icons">smartphone</i> Mobile</span>
+                        <strong th:text="${dash.mobile}">0</strong>
+                    </div>
+                    <div class="bar-track">
+                        <div class="bar-fill bar-fill--mobile"
+                             th:style="'width:' + ${dash.mobilePercent()} + '%'"></div>
+                    </div>
+                    <span class="device-item__pct" th:text="${dash.mobilePercent() + '%'}">0%</span>
+                </div>
+                <div class="device-item">
+                    <div class="device-item__header">
+                        <span><i class="material-icons">computer</i> Desktop</span>
+                        <strong th:text="${dash.desktop}">0</strong>
+                    </div>
+                    <div class="bar-track">
+                        <div class="bar-fill bar-fill--desktop"
+                             th:style="'width:' + ${dash.desktopPercent()} + '%'"></div>
+                    </div>
+                    <span class="device-item__pct" th:text="${dash.desktopPercent() + '%'}">0%</span>
+                </div>
+                <div th:if="${dash.total == 0}" class="empty-state" style="padding:1.5rem 0">
+                    <i class="material-icons">devices_other</i>
+                    <p>Sem dados ainda</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Top Ofertas -->
+        <div class="admin-card">
+            <h5 class="dash-section-title">
+                <i class="material-icons">leaderboard</i> Top Ofertas
+            </h5>
+            <div th:if="${dash.topOfertas.isEmpty()}" class="empty-state" style="padding:1.5rem 0">
+                <i class="material-icons">sell</i>
+                <p>Sem dados ainda</p>
+            </div>
+            <div class="top-ofertas" th:unless="${dash.topOfertas.isEmpty()}">
+                <div class="top-oferta-item" th:each="item, stat : ${dash.topOfertas}">
+                    <div class="top-oferta-item__header">
+                        <span class="top-oferta-item__rank" th:text="${stat.index + 1}">1</span>
+                        <span class="top-oferta-item__nome" th:text="${item.nomeProduto}">Produto</span>
+                        <strong class="top-oferta-item__total" th:text="${item.total}">0</strong>
+                    </div>
+                    <div class="bar-track" style="margin-top:.3rem">
+                        <div class="bar-fill bar-fill--accent"
+                             th:style="'width:' + ${item.total * 100 / dash.maxOfertaTotal()} + '%'"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cliques por dia -->
+    <div class="admin-card" style="margin-top:1.2rem">
+        <h5 class="dash-section-title">
+            <i class="material-icons">bar_chart</i> Cliques — Últimos 7 dias
+        </h5>
+        <div th:if="${dash.cliquesPorDia.isEmpty()}" class="empty-state" style="padding:1.5rem 0">
+            <i class="material-icons">bar_chart</i>
+            <p>Sem dados nos últimos 7 dias</p>
+        </div>
+        <div class="dia-chart" th:unless="${dash.cliquesPorDia.isEmpty()}">
+            <div class="dia-chart__item" th:each="dia : ${dash.cliquesPorDia}">
+                <div class="dia-chart__bar-wrap">
+                    <div class="dia-chart__bar"
+                         th:style="'height:' + ${dia.total * 100 / dash.maxDiaTotal()} + '%'"
+                         th:title="${dia.total + ' cliques'}">
+                        <span class="dia-chart__val" th:text="${dia.total}">0</span>
+                    </div>
+                </div>
+                <span class="dia-chart__label" th:text="${#strings.substring(dia.data, 5)}">MM-DD</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Eventos Recentes -->
+    <div style="margin-top:1.5rem">
+        <h5 class="dash-section-title" style="margin-bottom:.8rem">
+            <i class="material-icons">history</i> Últimos Eventos
+        </h5>
+        <div th:if="${dash.recentes.isEmpty()}" class="empty-state">
+            <i class="material-icons">history_toggle_off</i>
+            <p>Nenhum evento registrado ainda.</p>
+        </div>
+        <div class="table-wrapper" th:unless="${dash.recentes.isEmpty()}">
+            <table>
+                <thead>
+                <tr>
+                    <th>Tipo</th>
+                    <th>Dispositivo</th>
+                    <th>OS</th>
+                    <th>Browser</th>
+                    <th>País</th>
+                    <th>Cidade</th>
+                    <th>Data</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="e : ${dash.recentes}">
+                    <td data-label="Tipo">
+                        <span class="tipo-chip"
+                              th:classappend="${e.tipo.name() == 'CLIQUE_OFERTA'} ? ' tipo-chip--oferta' :
+                                             (${e.tipo.name() == 'CLIQUE_CUPOM'} ? ' tipo-chip--cupom' : ' tipo-chip--comprar')"
+                              th:text="${e.tipo.name().replace('_', ' ')}">-</span>
+                    </td>
+                    <td data-label="Dispositivo">
+                        <span th:if="${e.deviceTipo != null}">
+                            <i class="material-icons" style="font-size:.9rem;vertical-align:middle"
+                               th:text="${e.deviceTipo.name() == 'MOBILE'} ? 'smartphone' : 'computer'">smartphone</i>
+                            <span th:text="${e.deviceTipo}"></span>
+                        </span>
+                        <span th:unless="${e.deviceTipo != null}" style="color:#6b7280">—</span>
+                    </td>
+                    <td data-label="OS"       th:text="${e.os     ?: '—'}">—</td>
+                    <td data-label="Browser"  th:text="${e.browser ?: '—'}">—</td>
+                    <td data-label="País"     th:text="${e.pais   ?: '—'}">—</td>
+                    <td data-label="Cidade"   th:text="${e.cidade ?: '—'}">—</td>
+                    <td data-label="Data"     th:text="${#temporals.format(e.criadoEm, 'dd/MM HH:mm', T(java.util.TimeZone).getTimeZone('America/Sao_Paulo').toZoneId())}">—</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>
