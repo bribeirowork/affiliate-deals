@@ -582,6 +582,72 @@ td {
 
 .login-form .btn { justify-content: center; padding: .75rem; font-size: .92rem; }
 
+/* ── Filtro de datas (dashboard) ────────────── */
+
+.filtro-datas {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: .8rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1rem 1.2rem;
+  margin-bottom: .75rem;
+}
+
+.filtro-datas__campo {
+  display: flex;
+  flex-direction: column;
+  gap: .3rem;
+  flex: 1;
+  min-width: 180px;
+}
+
+.filtro-datas__campo label {
+  font-size: .72rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.filtro-datas__campo input[type="datetime-local"] {
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(139,92,246,.3);
+  border-radius: 10px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: .88rem;
+  padding: .6rem .9rem;
+  outline: none;
+  width: 100%;
+  color-scheme: dark;
+  transition: border-color .15s, box-shadow .15s;
+}
+
+.filtro-datas__campo input[type="datetime-local"]:focus {
+  border-color: var(--accent-end);
+  box-shadow: 0 0 0 3px rgba(139,92,246,.18);
+}
+
+.filtro-aviso {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  font-size: .78rem;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+  padding: .5rem .8rem;
+  border-radius: 8px;
+  background: rgba(255,255,255,.03);
+  border: 1px solid rgba(255,255,255,.06);
+}
+
+.filtro-aviso .material-icons { font-size: 1rem; color: #6366f1; }
+.filtro-aviso--padrao .material-icons { color: var(--text-muted); }
+.filtro-aviso strong { color: var(--text); }
+
 /* ── Dashboard ───────────────────────────────── */
 
 .dash-kpi-grid {

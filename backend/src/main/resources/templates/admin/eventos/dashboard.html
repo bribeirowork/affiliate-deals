@@ -18,6 +18,41 @@
         <h4><i class="material-icons" style="vertical-align:middle;margin-right:.3rem;color:#8b5cf6">insights</i> Painel de Oportunidades</h4>
     </div>
 
+    <!-- Filtro de data -->
+    <form th:action="@{/admin/eventos}" method="get" class="filtro-datas">
+        <div class="filtro-datas__campo">
+            <label for="de">De</label>
+            <input id="de" type="datetime-local" name="de" step="1"
+                   th:value="${dash.filtroDe}">
+        </div>
+        <div class="filtro-datas__campo">
+            <label for="ate">Até</label>
+            <input id="ate" type="datetime-local" name="ate" step="1"
+                   th:value="${dash.filtroAte}">
+        </div>
+        <button type="submit" class="btn" style="align-self:flex-end">
+            <i class="material-icons">filter_list</i> Filtrar
+        </button>
+        <a th:href="@{/admin/eventos}" class="btn btn--ghost" style="align-self:flex-end"
+           th:if="${dash.filtroAtivo()}">
+            <i class="material-icons">clear</i> Limpar
+        </a>
+    </form>
+
+    <p th:if="${dash.filtroAtivo()}" class="filtro-aviso">
+        <i class="material-icons">info</i>
+        Exibindo dados
+        <span th:if="${dash.filtroDe != null and !dash.filtroDe.isBlank()}">
+            de <strong th:text="${dash.filtroDe.replace('T',' ')}"></strong>
+        </span>
+        <span th:if="${dash.filtroAte != null and !dash.filtroAte.isBlank()}">
+            até <strong th:text="${dash.filtroAte.replace('T',' ')}"></strong>
+        </span>
+    </p>
+    <p th:unless="${dash.filtroAtivo()}" class="filtro-aviso filtro-aviso--padrao">
+        <i class="material-icons">schedule</i> Exibindo os últimos 30 dias. Use o filtro acima para um intervalo específico.
+    </p>
+
     <!-- KPI Cards -->
     <div class="dash-kpi-grid">
         <div class="kpi-card">
@@ -91,7 +126,7 @@
                 </div>
                 <div th:if="${dash.total == 0}" class="empty-state" style="padding:1.5rem 0">
                     <i class="material-icons">devices_other</i>
-                    <p>Sem dados ainda</p>
+                    <p>Sem dados para o período</p>
                 </div>
             </div>
         </div>
@@ -103,7 +138,7 @@
             </h5>
             <div th:if="${dash.topOfertas.isEmpty()}" class="empty-state" style="padding:1.5rem 0">
                 <i class="material-icons">sell</i>
-                <p>Sem dados ainda</p>
+                <p>Sem dados para o período</p>
             </div>
             <div class="top-ofertas" th:unless="${dash.topOfertas.isEmpty()}">
                 <div class="top-oferta-item" th:each="item, stat : ${dash.topOfertas}">
@@ -124,11 +159,11 @@
     <!-- Cliques por dia -->
     <div class="admin-card" style="margin-top:1.2rem">
         <h5 class="dash-section-title">
-            <i class="material-icons">bar_chart</i> Cliques — Últimos 7 dias
+            <i class="material-icons">bar_chart</i> Cliques por Dia
         </h5>
         <div th:if="${dash.cliquesPorDia.isEmpty()}" class="empty-state" style="padding:1.5rem 0">
             <i class="material-icons">bar_chart</i>
-            <p>Sem dados nos últimos 7 dias</p>
+            <p>Sem dados para o período</p>
         </div>
         <div class="dia-chart" th:unless="${dash.cliquesPorDia.isEmpty()}">
             <div class="dia-chart__item" th:each="dia : ${dash.cliquesPorDia}">
@@ -147,11 +182,11 @@
     <!-- Eventos Recentes -->
     <div style="margin-top:1.5rem">
         <h5 class="dash-section-title" style="margin-bottom:.8rem">
-            <i class="material-icons">history</i> Últimos Eventos
+            <i class="material-icons">history</i> Últimos 20 Eventos do Período
         </h5>
         <div th:if="${dash.recentes.isEmpty()}" class="empty-state">
             <i class="material-icons">history_toggle_off</i>
-            <p>Nenhum evento registrado ainda.</p>
+            <p>Nenhum evento no período selecionado.</p>
         </div>
         <div class="table-wrapper" th:unless="${dash.recentes.isEmpty()}">
             <table>
@@ -163,30 +198,30 @@
                     <th>Browser</th>
                     <th>País</th>
                     <th>Cidade</th>
-                    <th>Data</th>
+                    <th>Data / Hora</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="e : ${dash.recentes}">
                     <td data-label="Tipo">
                         <span class="tipo-chip"
-                              th:classappend="${e.tipo.name() == 'CLIQUE_OFERTA'} ? ' tipo-chip--oferta' :
-                                             (${e.tipo.name() == 'CLIQUE_CUPOM'} ? ' tipo-chip--cupom' : ' tipo-chip--comprar')"
-                              th:text="${e.tipo.name().replace('_', ' ')}">-</span>
+                              th:classappend="${e.tipo == 'CLIQUE_OFERTA'} ? ' tipo-chip--oferta' :
+                                             (${e.tipo == 'CLIQUE_CUPOM'} ? ' tipo-chip--cupom' : ' tipo-chip--comprar')"
+                              th:text="${e.tipo != null ? e.tipo.replace('_', ' ') : '—'}">—</span>
                     </td>
                     <td data-label="Dispositivo">
                         <span th:if="${e.deviceTipo != null}">
                             <i class="material-icons" style="font-size:.9rem;vertical-align:middle"
-                               th:text="${e.deviceTipo.name() == 'MOBILE'} ? 'smartphone' : 'computer'">smartphone</i>
+                               th:text="${e.deviceTipo == 'MOBILE'} ? 'smartphone' : 'computer'">smartphone</i>
                             <span th:text="${e.deviceTipo}"></span>
                         </span>
                         <span th:unless="${e.deviceTipo != null}" style="color:#6b7280">—</span>
                     </td>
-                    <td data-label="OS"       th:text="${e.os     ?: '—'}">—</td>
-                    <td data-label="Browser"  th:text="${e.browser ?: '—'}">—</td>
-                    <td data-label="País"     th:text="${e.pais   ?: '—'}">—</td>
-                    <td data-label="Cidade"   th:text="${e.cidade ?: '—'}">—</td>
-                    <td data-label="Data"     th:text="${#temporals.format(e.criadoEm, 'dd/MM HH:mm', T(java.util.TimeZone).getTimeZone('America/Sao_Paulo').toZoneId())}">—</td>
+                    <td data-label="OS"           th:text="${e.os      ?: '—'}">—</td>
+                    <td data-label="Browser"      th:text="${e.browser ?: '—'}">—</td>
+                    <td data-label="País"         th:text="${e.pais    ?: '—'}">—</td>
+                    <td data-label="Cidade"       th:text="${e.cidade  ?: '—'}">—</td>
+                    <td data-label="Data / Hora"  th:text="${e.criadoEm ?: '—'}">—</td>
                 </tr>
                 </tbody>
             </table>
