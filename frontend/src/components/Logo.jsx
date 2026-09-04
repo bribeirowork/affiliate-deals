@@ -44,8 +44,8 @@ export default function Logo() {
       </svg>
 
       <div className="logo__texto">
-        <span className="logo__cupons">BUSCADOR</span>
-        <span className="logo__subtitulo">de Ofertas</span>
+        <span className="logo__cupons">OFERTA</span>
+        <span className="logo__subtitulo">Hub</span>
       </div>
     </div>
   );

@@ -75,7 +75,7 @@ export default function App() {
           <span className="cabecalho__destaque">Melhores promoções</span> na{' '}
           <span className="cabecalho__loja cabecalho__loja--shopee">Shopee</span>,{' '}
           <span className="cabecalho__loja cabecalho__loja--ml">Mercado Livre</span>{' '}
-          e <span className="cabecalho__loja cabecalho__loja--maga">Magazine Luiza</span>.
+          e <span className="cabecalho__loja cabecalho__loja--maga">Magazine Luiza</span> em um só lugar.
         </p>
       </header>
 
